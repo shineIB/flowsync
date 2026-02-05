@@ -2,7 +2,7 @@
 
 A real-time collaborative architecture whiteboard built with FastAPI, React Flow, and Redis.
 
-![FlowSync Screenshot](https://via.placeholder.com/800x400?text=FlowSync+Architecture+Whiteboard)
+
 
 ## Features
 
