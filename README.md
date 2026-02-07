@@ -2,7 +2,9 @@
 
 A real-time collaborative architecture whiteboard built with FastAPI, React Flow, and Redis.
 
-<img width="800" height="397" alt="image" src="https://github.com/user-attachments/assets/61ad0ff7-aa8e-41c9-ae04-3d110c8dbcf7" />
+
+![ezgif com-video-to-gif-converter](https://github.com/user-attachments/assets/55bb0b83-5137-46fc-89ca-fb8ddc919e8d)
+
 
 
 ## Features
