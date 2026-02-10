@@ -124,11 +124,14 @@ const nodeTypes = {
 // Remote Cursor Component
 // =============================================================================
 
-const RemoteCursor = ({ x, y, color, clientId }) => {
+const RemoteCursor = ({ x, y, color, clientId, flowToScreen }) => {
+  // Convert flow coordinates to screen coordinates
+  const screenPos = flowToScreen({ x, y });
+  
   return (
     <div 
       className="remote-cursor"
-      style={{ transform: `translate(${x}px, ${y}px)` }}
+      style={{ transform: `translate(${screenPos.x}px, ${screenPos.y}px)` }}
     >
       <div className="cursor-pointer" style={{ color }} />
       <div className="cursor-label" style={{ backgroundColor: color }}>
@@ -315,7 +318,7 @@ const FlowCanvas = () => {
   
   const wsRef = useRef(null);
   const reconnectTimeoutRef = useRef(null);
-  const { project } = useReactFlow();
+  const { project, flowToScreenPosition } = useReactFlow();
   
   // Track if we're currently processing a remote update
   const isRemoteUpdate = useRef(false);
@@ -697,17 +700,19 @@ const FlowCanvas = () => {
           </div>
         </Panel>
         
-        {/* Remote Cursors */}
-        {Object.entries(cursors).map(([clientId, cursor]) => (
-          <RemoteCursor
-            key={clientId}
-            x={cursor.x}
-            y={cursor.y}
-            color={cursor.color}
-            clientId={clientId}
-          />
-        ))}
-      </ReactFlow>
+        </ReactFlow>
+      
+      {/* Remote Cursors - rendered outside ReactFlow for proper screen positioning */}
+      {Object.entries(cursors).map(([clientId, cursor]) => (
+        <RemoteCursor
+          key={clientId}
+          x={cursor.x}
+          y={cursor.y}
+          color={cursor.color}
+          clientId={clientId}
+          flowToScreen={flowToScreenPosition}
+        />
+      ))}
       
       {/* Analysis Panel */}
       {showAnalysis && (
