@@ -124,14 +124,15 @@ const nodeTypes = {
 // Remote Cursor Component
 // =============================================================================
 
-const RemoteCursor = ({ x, y, color, clientId, flowToScreen }) => {
-  // Convert flow coordinates to screen coordinates
-  const screenPos = flowToScreen({ x, y });
-  
+const RemoteCursor = ({ x, y, color, clientId }) => {
+  // x and y are percentages (0-100), convert to viewport position
   return (
     <div 
       className="remote-cursor"
-      style={{ transform: `translate(${screenPos.x}px, ${screenPos.y}px)` }}
+      style={{ 
+        left: `${x}%`,
+        top: `${y}%`,
+      }}
     >
       <div className="cursor-pointer" style={{ color }} />
       <div className="cursor-label" style={{ backgroundColor: color }}>
@@ -498,17 +499,17 @@ const FlowCanvas = () => {
     }, 50); // Throttle to 20 updates per second
     
     const bounds = event.currentTarget.getBoundingClientRect();
-    const position = project({
-      x: event.clientX - bounds.left,
-      y: event.clientY - bounds.top,
-    });
+    
+    // Send percentage-based coordinates (0-100)
+    const xPercent = ((event.clientX - bounds.left) / bounds.width) * 100;
+    const yPercent = ((event.clientY - bounds.top) / bounds.height) * 100;
     
     sendMessage({
       type: 'cursor_move',
-      x: position.x,
-      y: position.y,
+      x: xPercent,
+      y: yPercent,
     });
-  }, [project, sendMessage]);
+  }, [sendMessage]);
 
   // ==========================================================================
   // Node Change Handlers
@@ -710,7 +711,6 @@ const FlowCanvas = () => {
           y={cursor.y}
           color={cursor.color}
           clientId={clientId}
-          flowToScreen={flowToScreenPosition}
         />
       ))}
       
